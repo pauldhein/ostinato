@@ -2,4 +2,4 @@ from setuptools import setup
 
 
 if __name__ == "__main__":
-    setup(install_requires=["numpy"])
+    setup(install_requires=["numpy", "tqdm"])
