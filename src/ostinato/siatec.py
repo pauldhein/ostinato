@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+from typing import List, Tuple
+
 # =============================================================================
 # CORE SIATEC
 # =============================================================================
@@ -45,9 +48,10 @@ def compute_TEC_set(D, V, W, Y):
         while j < num_vectors and V[j][0] == V[Y[i][0]][0]:
             I.append(V[j][1])
             j += 1
-        pat_set = [D[index] for index in I]
+        patt_set = [D[index] for index in I]
         trans_set = compute_TEC_translators(D, W, I)
-        T.append((pat_set, trans_set))
+        if trans_set:
+            T.append((patt_set, trans_set))
 
         while True:
             i += 1
@@ -108,5 +112,28 @@ def siatec(D):
     V, W = compute_vector_table(D)
     Y = compute_vector_representations(D, V)
     T = compute_TEC_set(D, V, W, Y)
-    betterT = [t for t in T if len(t[0]) > 1]
+    betterT = [
+        TranslationalEquivalenceClass.from_data(t) for t in T if len(t[0]) > 1
+    ]
     return betterT
+
+
+DataPoint = Tuple[int, float]
+
+
+@dataclass
+class TranslationalEquivalenceClass:
+    pattern: List[DataPoint]
+    translators: List[DataPoint]
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        patts = "; ".join([str(d) for d in self.pattern])
+        trans = "; ".join([str(t) for t in self.translators])
+        return f"PATTERN: {patts}\nTRANSLATORS: {trans}"
+
+    @classmethod
+    def from_data(cls, t: Tuple[List[DataPoint], List[DataPoint]]):
+        return cls(t[0], t[1])
