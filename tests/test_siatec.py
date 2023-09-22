@@ -1,6 +1,6 @@
 import pytest
 
-from ostinato.siatec import siatec
+from ostinato.siatec import siatec, TranslationalEquivalenceClass
 
 
 def check_TECs(T):
@@ -10,14 +10,12 @@ def check_TECs(T):
 
     for tec in T:
         # TEC is a tuple with a defined pattern and a list of pattern offsets
-        assert isinstance(tec, tuple)
-        assert len(tec) == 2
-        pattern, translations = tec
+        assert isinstance(tec, TranslationalEquivalenceClass)
 
         # Pattern must have at least two notes and there must be at least a
         # single translation
-        assert len(pattern) > 1
-        assert len(translations) > 0
+        assert len(tec.pattern) > 1
+        assert len(tec.translators) > 0
 
 
 def test_elbow_dataset(elbow_dataset):
